@@ -1,0 +1,55 @@
+#! /usr/bin/env node
+
+const { program, command } = require('commander');
+
+// 参数格式化
+const cleanArgs = (cmd) => {
+  const args = {};
+  cmd.options.forEach((o) => {
+    const key = o.long.slice(2);
+    if (cmd[key]) {
+      args[key] = cmd[key];
+    }
+  });
+  return args;
+};
+
+// 指令设置
+program
+  .command('create <app-name>')
+  .description('create a new app')
+  .option('-f,--force', 'overwrite target directory if it exists')
+  .action((name, cmd) => {
+    console.log(name);
+    console.log(cmd);
+    console.log(cleanArgs(cmd));
+  });
+
+program
+  .command('config [value]')
+  .description('inspect and modify the config')
+  .option('-g,--get <path>', 'get value from option')
+  .option('-s,--set <path> <valye>', 'set value to config')
+  .option('-d,--delete <path>', 'delete option from config')
+  .action((value, cmd) => {
+    console.log(value);
+    console.log(cmd);
+    console.log(cleanArgs(cmd));
+  });
+
+program
+  .command('ui')
+  .description('start and open testcli ui')
+  .option('-p,-port <port>', 'port used for the UI Server')
+  .action((cmd) => {
+    console.log(cleanArgs(cmd));
+  });
+
+// 版本号
+program.version(`testcli@${require('../package.json').version}`);
+
+// 提示
+program.usage('<command> [option]');
+
+// 解析
+program.parse(program.argv);
